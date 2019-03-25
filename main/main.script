@@ -1,0 +1,17 @@
+-- Resolution of simulation
+NUM_POINTS = 150
+
+function init(self)
+	--msg.post("@system:", "toggle_physics_debug") 
+	self.pts = {}
+	math.randomseed (1234)
+
+	for i = 1,NUM_POINTS do
+		local pos = go.get_position()
+		pos.x = pos.x -200 + math.random()*400
+		pos.y = pos.y -400 + math.random()*800
+		self.pts[i] = {
+			id = factory.create("#particles", pos, _, _, 5)
+		}
+	end
+end
