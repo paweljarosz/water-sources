@@ -2,7 +2,7 @@
 NUM_POINTS = 150
 
 function init(self)
-	--msg.post("@system:", "toggle_physics_debug") 
+	msg.post("@system:", "toggle_physics_debug") 
 	self.pts = {}
 	math.randomseed (1234)
 

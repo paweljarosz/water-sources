@@ -1,5 +1,5 @@
 name: "sprite"
-tags: "tile"
+tags: "metaball"
 vertex_program: "/main/metaball.vp"
 fragment_program: "/main/metaball.fp"
 vertex_space: VERTEX_SPACE_WORLD

@@ -1,5 +1,6 @@
 [project]
 title = Water2D
+dependencies = https://github.com/rgrams/rendercam/archive/v1.0.1.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc
