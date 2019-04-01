@@ -1,7 +1,7 @@
 name: "sprite"
 tags: "metaball"
-vertex_program: "/main/metaball.vp"
-fragment_program: "/main/metaball.fp"
+vertex_program: "/defluid/metaball.vp"
+fragment_program: "/defluid/metaball.fp"
 vertex_space: VERTEX_SPACE_WORLD
 vertex_constants {
   name: "view_proj"

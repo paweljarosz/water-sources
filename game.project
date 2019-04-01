@@ -3,8 +3,8 @@ title = Water2D
 dependencies = https://github.com/rgrams/rendercam/archive/v1.0.1.zip
 
 [bootstrap]
-main_collection = /main/main.collectionc
-render = /main/metaballs.renderc
+main_collection = /example/main.collectionc
+render = /defluid/defluid.renderc
 
 [input]
 game_binding = /input/game.input_bindingc
@@ -57,10 +57,10 @@ input_method = HiddenInputField
 shared_state = 1
 
 [physics]
-max_contacts = 2048
-max_collisions = 2048
+max_contacts = 4096
+max_collisions = 4096
 trigger_overlap_capacity = 64
-gravity_y = -100.0
+gravity_y = -1000.0
 
 [sprite]
 max_count = 1024
