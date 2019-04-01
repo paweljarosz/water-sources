@@ -217,7 +217,7 @@ instances {
 }
 scale_along_z: 0
 embedded_instances {
-  id: "MAIN"
+  id: "main"
   data: "components {\n"
   "  id: \"main\"\n"
   "  component: \"/example/main.script\"\n"

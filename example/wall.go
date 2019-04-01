@@ -7,7 +7,7 @@ embedded_components {
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"ground\"\n"
-  "mask: \"water\"\n"
+  "mask: \"defluid\"\n"
   "mask: \"mob\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"

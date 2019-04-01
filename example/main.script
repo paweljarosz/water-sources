@@ -3,7 +3,10 @@
 
 function init(self)
 	msg.post("/defluid", "activate")	-- activate creation of metaballs (fluid)
-	msg.post("/defluid", "change", {dry_each_after = 1})	-- change param of defluid
+	msg.post("/defluid", "change", { dry_each_after = 1 })	-- change param of defluid
+	timer.delay(3.5, false, function() 	-- after 3.5 s push up all metaballs
+		msg.post("/defluid", "force", { force = vmath.vector3(0,10000000,0) })
+	end)
 	msg.post("/defluid", "dry")			-- activate drying (dry a metaball every second)
 end
 

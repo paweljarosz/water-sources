@@ -20,6 +20,7 @@ go.property("debug_physics", false)
 local ACTIVATE = hash("activate")
 local DRY = hash("dry")
 local CHANGE = hash("change")
+local FORCE = hash("force")
 local REMOVE = hash("remove")
 
 local function dry_metaballs(self)
@@ -50,19 +51,20 @@ local function create_metaballs(self)
 		local pos = go.get_position()
 		pos.x = pos.x - (self.emitter_width/2) + math.random()*self.emitter_width
 		pos.y = pos.y - (self.emitter_height/2) + math.random()*self.emitter_height
-		ball = {
-			id = factory.create("#particles", pos, _, _, self.scale_of_metaball)
-		}
+		ball = {}
+		ball.id = factory.create("#particles", pos, _, _, self.scale_of_metaball)
+		ball.url = msg.url(msg.url(ball.id).socket, msg.url(ball.id).path, "collisionobject")
 		table.insert(self.metaballs, ball)
 	end
 	dry_metaballs(self)
 end
 
-local function set_speed(self)
+local function set_speed(self, speed)
+	print("FORCE")
 	for _,metaball in ipairs(self.metaballs) do
-		local url = msg.url(msg.url(metaball).socket, msg.url(metaball).path, "#collsionobject")
-		msg.post(url, "apply_force", {force = vmath.vector3(1, 0, 0),
-			position = go.get_world_position(metaball)})
+		--print(metaball.url, go.get_world_position(metaball.id))
+		msg.post(metaball.url, "apply_force", {force = speed,
+			position = go.get_world_position(metaball.id)})
 	end
 end
 
@@ -86,6 +88,9 @@ function on_message(self, message_id, message, sender)
 		self.emitter_width 		= message.emitter_width 	or self.emitter_width
 		self.emitter_height 	= message.emitter_height 	or self.emitter_height
 		self.dry_each_after 	= message.dry_each_after 	or self.dry_each_after
+
+	elseif message_id == FORCE then
+		set_speed(self, message.force)
 
 	elseif message_id == DRY then
 		dry_metaballs(self)
