@@ -10,7 +10,6 @@
 
 go.property("num_of_metaballs", 100)
 go.property("scale_of_metaball", 1)
-go.property("initial_speed", vmath.vector3())
 go.property("emitter_width", 50)
 go.property("emitter_height", 50)
 go.property("dry_each_after", 0)
@@ -59,11 +58,9 @@ local function create_metaballs(self)
 	dry_metaballs(self)
 end
 
-local function set_speed(self, speed)
-	print("FORCE")
+local function set_force(self, force)
 	for _,metaball in ipairs(self.metaballs) do
-		--print(metaball.url, go.get_world_position(metaball.id))
-		msg.post(metaball.url, "apply_force", {force = speed,
+		msg.post(metaball.url, "apply_force", {force = force,
 			position = go.get_world_position(metaball.id)})
 	end
 end
@@ -84,13 +81,12 @@ function on_message(self, message_id, message, sender)
 
 	elseif message_id == CHANGE then
 		self.num_of_metaballs 	= message.num_of_metaballs 	or self.num_of_metaballs
-		self.initial_speed 		= message.initial_speed 	or self.initial_speed
 		self.emitter_width 		= message.emitter_width 	or self.emitter_width
 		self.emitter_height 	= message.emitter_height 	or self.emitter_height
 		self.dry_each_after 	= message.dry_each_after 	or self.dry_each_after
 
 	elseif message_id == FORCE then
-		set_speed(self, message.force)
+		set_force(self, message.force)
 
 	elseif message_id == DRY then
 		dry_metaballs(self)
