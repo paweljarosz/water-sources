@@ -8,6 +8,11 @@
 -- on the render target defluid_plane (include it in your collection)
 -- It utilizes the rendercam, so include a camera in your collection too.
 
+-- Created by Pawel Jarosz 2019 (MIT license - A short, permissive software license.
+-- You are free to do whatever you want as long as you include the original copyright
+-- and license notice in any copy of the software/source.)
+
+
 go.property("num_of_metaballs", 100)
 go.property("scale_of_metaball", 1)
 go.property("emitter_width", 50)

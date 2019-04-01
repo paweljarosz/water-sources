@@ -1,5 +1,6 @@
 -- DEFLUID example
 -- This example shows how can you modify defluid game object by sending messages to its script.
+-- Created by Pawel Jarosz 2019 (MIT license - A short, permissive software license. You are free to do whatever you want as long as you include the original copyright and license notice in any copy of the software/source.)
 
 function init(self)
 	msg.post("/defluid", "activate")	-- activate creation of metaballs (fluid)
