@@ -68,3 +68,6 @@ max_count = 1024
 [graphics]
 max_debug_vertices = 20000
 
+[library]
+include_dirs = Water2D
+
