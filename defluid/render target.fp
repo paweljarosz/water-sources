@@ -10,13 +10,13 @@ void main()
 	vec4 metaball = texture2D(tex_metaball, var_texcoord0.xy);
 	vec4 base = texture2D(tex_base, var_texcoord0.xy);
 
-	float threshold = 0.9999;
+	float threshold = 0.8;
 	
 	if (metaball.a > threshold) {
 		metaball = color;
 	}
 	else {
-		metaball = vec4(0,0,0,1);
+		metaball = vec4(0.0,0.0,0.0,1.0);
 	}
 
 	base += metaball;
