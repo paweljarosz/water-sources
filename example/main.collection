@@ -37,12 +37,12 @@ instances {
     id: "defluid"
     properties {
       id: "num_of_metaballs"
-      value: "300.0"
+      value: "800.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
       id: "scale_of_metaball"
-      value: "2.0"
+      value: "1.5"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
@@ -57,6 +57,11 @@ instances {
     }
     properties {
       id: "create_at_init"
+      value: "false"
+      type: PROPERTY_TYPE_BOOLEAN
+    }
+    properties {
+      id: "debug_physics"
       value: "false"
       type: PROPERTY_TYPE_BOOLEAN
     }
@@ -165,7 +170,12 @@ instances {
     id: "defluid_color"
     properties {
       id: "fluid_color"
-      value: "0.0, 0.5, 0.8, 0.5"
+      value: "0.0, 0.5, 0.8, 0.9"
+      type: PROPERTY_TYPE_VECTOR4
+    }
+    properties {
+      id: "surface_color"
+      value: "1.0, 1.0, 1.0, 0.8"
       type: PROPERTY_TYPE_VECTOR4
     }
   }
@@ -180,7 +190,7 @@ instances {
   prototype: "/example/static_object.go"
   position {
     x: -100.0
-    y: 0.0
+    y: 130.0
     z: 0.0
   }
   rotation {
@@ -200,7 +210,7 @@ instances {
   prototype: "/example/static_object.go"
   position {
     x: 100.0
-    y: 0.0
+    y: 130.0
     z: 0.0
   }
   rotation {
@@ -208,6 +218,26 @@ instances {
     y: 0.0
     z: -0.17364818
     w: 0.9848077
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "programmed_object"
+  prototype: "/example/programmed_object.go"
+  position {
+    x: -150.0
+    y: -180.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.087155744
+    w: 0.9961947
   }
   scale3 {
     x: 1.0
