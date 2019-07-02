@@ -27,20 +27,34 @@ local CHANGE = hash("change")
 local FORCE = hash("force")
 local REMOVE = hash("remove")
 
+local monarch = require "monarch.monarch"
+
 local function dry_metaballs(self)
 	self.i = 1
-	if self.dry_each_after ~= 0 then 
-		self.tim = timer.delay(self.dry_each_after, true, function()
-			if self.i <= self.num_of_metaballs then
+	if self.dry_each_after ~= 0 then
+		timer.delay(self.dry_each_after, true, function(self, handle)
+			self.tim = handle
+			if self.i <= self.num_of_metaballs and not self.dried then
 				local metaball = table.remove(self.metaballs)
 				go.animate(msg.url(metaball.id), "scale", go.PLAYBACK_ONCE_FORWARD,
 				0, go.EASING_INOUTSINE, self.dry_each_after, 0, function()
 					go.delete(metaball) end)
 					self.i = self.i + 1
-			else
+			elseif not self.dried then
+				self.dried = true
 				timer.cancel(self.tim)
 				self.tim = nil
-				self.i = nil
+				timer.delay(0.1, false, function()
+					msg.post(TARGET_URL, "game_over")
+					--[[self.preload = timer.delay(0.1, true, function()	-- timer for requests for preload
+						monarch.preload("game_over", function()		-- preload screen
+							timer.cancel(self.preload)					-- and when preloaded, cancel requests for preload
+							repeat
+								local success = monarch.show("game_over")				-- and show the preloaded screen
+							until (success)
+						end)
+					end)]]--
+				end)
 			end
 		end)
 	end
@@ -66,18 +80,28 @@ end
 local function set_force(self, force)
 	for _,metaball in ipairs(self.metaballs) do
 		msg.post(metaball.url, "apply_force", {force = force,
-			position = go.get_world_position(metaball.id)})
+		position = go.get_world_position(metaball.id)})
+	end
+end
+
+local function set_random_force(self, dir_mask)
+	for _,metaball in ipairs(self.metaballs) do
+		local val = (math.random() + 0.5) * 100000
+		msg.post(metaball.url, "apply_force", {force = dir_mask*val,
+		position = go.get_world_position(metaball.id)})
 	end
 end
 
 
 function init(self)
+	math.randomseed(os.time())
 	if self.debug_physics then
 		msg.post("@system:", "toggle_physics_debug")
 	end
 	if self.create_at_init then
 		create_metaballs(self)
 	end
+	self.dried = false
 end
 
 function on_message(self, message_id, message, sender)
@@ -91,7 +115,11 @@ function on_message(self, message_id, message, sender)
 		self.dry_each_after 	= message.dry_each_after 	or self.dry_each_after
 
 	elseif message_id == FORCE then
-		set_force(self, message.force)
+		if message.force == hash("random") then
+			set_random_force(self, message.dir_mask)
+		else
+			set_force(self, message.force)
+		end
 
 	elseif message_id == DRY then
 		dry_metaballs(self)

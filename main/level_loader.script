@@ -1,0 +1,22 @@
+local monarch = require "monarch.monarch"
+
+go.property("level", 1)
+
+LOAD_LEVEL = hash("load_level")
+LEVEL_LOADER = msg.url()
+
+function init(self)
+	monarch.debug()
+	LEVEL_LOADER = msg.url()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == LOAD_LEVEL then
+		print("1 loading level"..message.level, "requested from:", sender)
+		local load_level = "level"..message.level
+		repeat
+			local success = monarch.show(hash("loading"), {reload = true, clear = true},
+				{ load = load_level, game_over = message.game_over })
+		until (success)
+	end
+end

@@ -1,0 +1,38 @@
+go.property("next_level", 2)
+
+local TRIGGER = hash("trigger_response")
+local GAME_OVER = hash("game_over")
+
+TARGET_URL = nil
+
+function init(self)
+	self.volume = -20
+	self.volume_max = 0
+	self.full = false
+
+	local pos = go.get_position()
+	pos.z = 0.99
+	pos.y = pos.y - 16
+	local rot = vmath.quat(math.rad(self.volume), 0, 0, 1)
+	
+	self.logo = factory.create("#factory", pos, rot, _, 0.25)
+	TARGET_URL = msg.url()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == TRIGGER and message.enter then
+		self.volume = self.volume + 0.7
+		if self.volume >= self.volume_max and not self.full then
+			self.full = true
+			timer.delay(2, false, function()
+				msg.post(LEVEL_LOADER, LOAD_LEVEL, {level = self.next_level})
+				go.delete()
+			end)
+		elseif not self.full then
+			go.set_rotation(vmath.quat(math.rad(self.volume), 0, 0, 1), self.logo)
+			--msg.post(GUI_URL, "update", {target = self.volume})
+		end
+	elseif message_id == GAME_OVER then
+		msg.post(LEVEL_LOADER, LOAD_LEVEL, {level = (self.next_level-1), game_over = true})	-- replay the current level
+	end
+end

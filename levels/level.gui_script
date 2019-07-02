@@ -1,0 +1,82 @@
+local transitions = require "monarch.transitions.gui"
+local monarch = require "monarch.monarch"
+
+GUI_URL = nil
+local UPDATE = hash("update")
+
+
+local function change_chr(c)
+	local cb = string.byte(c)
+
+	if cb >= 65 and cb <= 90 then -- upper case
+		cb = cb-65+97
+	elseif cb >= 97 and cb <= 122 then -- lower case
+		cb = cb-97+65
+	elseif cb >= 48 and cb <= 57 then -- numbers alt 1
+		cb = cb-48+38
+	elseif cb >= 38 and cb <= 47 then -- numbers alt 2
+		cb = cb-38+48
+	end
+	return string.char(cb)
+end
+
+local function change_str(text)
+	local out = ""
+	local l = #text
+	for i=1,l do
+		local c = string.sub(text, i, i)
+		c = change_chr(c)
+		out = out .. c
+	end
+	return out
+end
+
+function init(self)
+	GUI_URL = msg.url()
+	self.transition = transitions.fade_in_out(gui.get_node("root"), 1, 0)
+	self.power_txt = gui.get_node("text")
+	self.power = 10
+	self.power_max = 10
+
+	local upper = false
+
+	timer.delay(0.3, true, function()
+		text = self.power.." bombs"
+		if self.power == 1 then
+			text = self.power.." bomb"
+		end
+		upper = not upper
+		if upper then text = change_str(text) end
+		gui.set_text(self.power_txt, text)
+	end)
+
+	self.over = false
+end
+
+function on_message(self, message_id, message, sender)
+	self.transition.handle(message_id, message, sender)
+	if message_id == UPDATE and not self.over then
+		if message.power then
+			self.power = message.power
+		end
+		if message.power_max then
+			self.power_max = message.power_max
+		end
+
+		if self.power <= 0 then
+			self.over = true
+			timer.delay(0.1, false, function()
+				msg.post(TARGET_URL, "game_over")
+				--[[
+				self.preload = timer.delay(0.1, true, function()	-- timer for requests for preload
+					monarch.preload("game_over", function()		-- preload screen
+						timer.cancel(self.preload)					-- and when preloaded, cancel requests for preload
+						repeat
+							local success = monarch.show("game_over")				-- and show the preloaded screen
+						until (success)
+					end)
+				end)]]
+			end)
+		end
+	end
+end

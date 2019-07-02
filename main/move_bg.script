@@ -1,0 +1,7 @@
+function init(self)
+	local tint =  vmath.vector4(0.85)
+	go.set("#sprite", "tint", tint)
+	go.set("#sprite1", "tint", tint)
+	go.set("#sprite2", "tint", tint)
+	go.animate(".", "position.x", go.PLAYBACK_LOOP_FORWARD, 130*3, go.EASING_LINEAR, 8)
+end

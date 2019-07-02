@@ -1,0 +1,4 @@
+function init(self)
+	particlefx.play("#fx")
+	timer.delay(0.5, false, function() go.delete() end)
+end

@@ -1,0 +1,25 @@
+local transitions = require "monarch.transitions.gui"
+
+local del = 2
+
+function init(self)
+	print("Game over")
+	self.transition = transitions.fade_in_out(gui.get_node("root"), 0.3, 0)
+
+	local upper = false
+	local text = "game over"
+	local node = gui.get_node("text")
+	timer.delay(0.5, true, function()
+		upper = not upper
+		if upper then
+			text = "game over"
+		else
+			text = "GAME OVER"
+		end
+		gui.set_text(node, text)
+	end)
+
+	timer.delay(del, false, function()
+		--msg.post(LEVEL_LOADER, LOAD_LEVEL, {level = 0})
+	end)
+end

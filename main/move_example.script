@@ -1,0 +1,6 @@
+function init(self)
+	self.pos = go.get_position()
+	go.animate(".", "position.y", go.PLAYBACK_LOOP_PINGPONG, self.pos.y+100, go.EASING_INOUTSINE, 1.5)
+	go.animate(".", "position.x", go.PLAYBACK_LOOP_PINGPONG, self.pos.x+300, go.EASING_INOUTSINE, 4)
+	--go.animate(".", "rotation.z", go.PLAYBACK_LOOP_PINGPONG, math.rad(330), go.EASING_INOUTSINE, 4)
+end

@@ -1,9 +1,9 @@
 [project]
-title = Water2D
-dependencies = https://github.com/rgrams/rendercam/archive/v1.0.1.zip
+title = Source
+dependencies = https://github.com/rgrams/rendercam/archive/v1.0.1.zip,https://github.com/britzl/monarch/archive/master.zip
 
 [bootstrap]
-main_collection = /example/main.collectionc
+main_collection = /main/main.collectionc
 render = /defluid/defluid.renderc
 
 [input]
@@ -11,8 +11,8 @@ game_binding = /input/game.input_bindingc
 use_accelerometer = 0
 
 [display]
-width = 640
-height = 1136
+width = 720
+height = 720
 
 [ios]
 app_icon_120x120 = /assets/app_icons/icon_120.png
@@ -57,17 +57,30 @@ input_method = HiddenInputField
 shared_state = 1
 
 [physics]
-max_contacts = 4096
-max_collisions = 4096
+max_contacts = 8192
+max_collisions = 8192
 trigger_overlap_capacity = 64
-gravity_y = -800.0
+gravity_y = -400.0
+scale = 1.0
 
 [sprite]
-max_count = 1024
+max_count = 2048
+subpixels = 1
 
 [graphics]
 max_debug_vertices = 20000
+default_texture_min_filter = linear
+default_texture_mag_filter = linear
 
 [library]
 include_dirs = Water2D
+
+[sound]
+max_sound_instances = 256
+
+[label]
+subpixels = 0
+
+[collection_proxy]
+max_count = 32
 

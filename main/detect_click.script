@@ -1,0 +1,141 @@
+local TILE_SIZE = 16       --your tile size
+local TILEMAP = {x,y,h,w}
+local TILEMAP_URL = "/tilemap#level"
+local LAYER = hash("layer")
+
+local rendercam = require "rendercam.rendercam"
+
+go.property("clicks", 10)
+
+function init(self)
+	msg.post("#", "acquire_input_focus")
+	--TILEMAP.x, TILEMAP.y, TILEMAP.h, TILEMAP.w, = tilemap.get_bounds(TILEMAP_URL)
+	TILEMAP = {x = 0, y = 0, h = 22, w = 22}
+	msg.post(GUI_URL, "update", {power = self.clicks, power_max = self.clicks})
+end
+
+
+local legal_tiles = {300, 102, 79, 80, 104, 105}--, 126, 127, 128, 129, 130, 76, 78, 214}
+
+local function is_legal(corner)
+	for _,v in ipairs(legal_tiles) do	
+		if corner == v then return true end
+	end
+	return true
+end
+
+local corner_tiles = {300, 79, 80, 104, 105}
+
+local function is_corner(corner)
+	for _,v in ipairs(corner_tiles) do	
+		if corner == v then return true end
+	end
+	return false
+end
+
+local function explode(x,y)
+	x = x + 1
+	y = y + 1
+	--[[tilemap.set_tile(TILEMAP_URL, LAYER, x+ 1, y , 300) --exploded
+	tilemap.set_tile(TILEMAP_URL, LAYER, x, y , 300)
+	tilemap.set_tile(TILEMAP_URL, LAYER, x-1, y , 300)
+	tilemap.set_tile(TILEMAP_URL, LAYER, x, y+1 , 300)
+	tilemap.set_tile(TILEMAP_URL, LAYER, x, y-1 , 300)]]
+	
+	local corner = tilemap.get_tile(TILEMAP_URL, LAYER, x, y+1)	-- Left Upper
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x, y+1, 79)--128)
+		if is_corner(corner) then
+			tilemap.set_tile(TILEMAP_URL, LAYER, x, y+1 , 300)
+		end
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x+1, y+1)			-- Right Upper
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x+1, y+1, 80)--126)
+		if is_corner(corner) then
+			tilemap.set_tile(TILEMAP_URL, LAYER, x+1, y+1 , 300)
+		end
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x, y)			-- Left Lower
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x, y, 104)--130)
+		if is_corner(corner) then
+			tilemap.set_tile(TILEMAP_URL, LAYER, x, y , 300)
+		end
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x+1, y)			-- Right Lower
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x+1, y, 105)--129)
+		if is_corner(corner) then
+			tilemap.set_tile(TILEMAP_URL, LAYER, x+1, y , 300)
+		end
+	end
+
+	--[[corner = tilemap.get_tile(TILEMAP_URL, LAYER, x, y+2)			-- Up
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x, y+2 , 127)
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x, y-2)			-- Down
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x, y-2 , 214)
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x-2, y)			-- Left
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x-2, y , 78)
+	end
+
+	corner = tilemap.get_tile(TILEMAP_URL, LAYER, x+2, y)			-- Right
+	if is_legal(corner) then
+		tilemap.set_tile(TILEMAP_URL, LAYER, x+2, y , 76)
+	end]]
+	
+end
+
+local function explode_fx(x,y)
+	factory.create("#factory", vmath.vector3(x,y,1))
+end
+
+function on_input(self, action_id, action)
+	if (action_id == hash("click") or action_id == hash("touch")) and action.released then
+
+		local pos = rendercam.screen_to_world_2d(math.floor(action.x), math.floor(action.y), false, 0)
+
+		print("Touched in world", pos.x, pos.y)
+		
+		for ix = 0,22 do
+			for iy = 0,22 do
+				local tile_x = ix * TILE_SIZE
+				local tile_y = iy * TILE_SIZE
+				local next_x = (ix + 1) * TILE_SIZE
+				local next_y = (iy + 1) * TILE_SIZE
+				--local pressed_x = (action.x + 1 )*0.46
+				--local pressed_y = (action.y + 140)*0.36
+
+				local pressed_x = (pos.x)
+				local pressed_y = (pos.y)
+
+				print("Recalculated to", pressed_x, pressed_y)
+				
+				local touches_x = (pressed_x  > tile_x) and (pressed_x < next_x)
+				local touches_y = (pressed_y > tile_y) and (pressed_y < next_y)
+				if touches_x and touches_y then  --if the tile is the required tile
+					print("Touched tile", ix, iy)
+					explode(ix, iy)
+					explode_fx(pressed_x, pressed_y)
+					self.clicks = self.clicks - 1
+					rendercam.shake(3, 1)
+					msg.post(GUI_URL, "update", {power = self.clicks})
+				end
+			end
+		end
+	end
+end
+
+function final(self)
+	msg.post("#", "release_input_focus")
+end

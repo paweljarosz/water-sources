@@ -1,0 +1,56 @@
+go.property("no", 1)
+
+local txt = {}
+txt[1] = "water sources"
+txt[2] = "a game by pawel jarosz"
+txt[3] = "made in defold for UDGJ 2"
+txt[4] = "click to start"
+txt[5] = "click here"
+txt[6] = "so the water can reach the logo"
+txt[7] = "the amount of bombs is limited"
+txt[8] = "each droplet dries in a moment"
+txt[9] = "stone can not be breached"
+txt[10] = "in our world water needs years to soak so deep"
+txt[11] = "groundwater is the source for our sinks"
+txt[12] = "it is getting harder to soak before drying"
+txt[13] = "that is why the global warming is a threat"
+txt[14] = "we are using countless liters of water"
+txt[15] = "even today cities are in danger of drought"
+txt[16] = "take care about your source of life"
+
+function animate_label(text)
+
+	local function change_chr(c)
+		local cb = string.byte(c)
+
+		if cb >= 65 and cb <= 90 then -- upper case
+			cb = cb-65+97
+		elseif cb >= 97 and cb <= 122 then -- lower case
+			cb = cb-97+65
+		elseif cb >= 48 and cb <= 57 then -- numbers alt 1
+			cb = cb-48+38
+		elseif cb >= 38 and cb <= 47 then -- numbers alt 2
+			cb = cb-38+48
+		end
+		return string.char(cb)
+	end
+	local function change_str(text)
+		local out = ""
+		local l = #text
+		for i=1,l do
+			local c = string.sub(text, i, i)
+			c = change_chr(c)
+			out = out .. c
+		end
+		return out
+	end
+
+	timer.delay(0.2, true, function()
+		text = change_str(text)
+		label.set_text("#label", text)
+	end)
+end
+
+function init(self)
+	animate_label(txt[self.no])
+end

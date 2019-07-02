@@ -1,0 +1,49 @@
+local transitions = require "monarch.transitions.gui"
+local monarch = require "monarch.monarch"
+
+local del = 0.1
+
+function init(self)
+	msg.post("#", "acquire_input_focus")
+	self.transition = transitions.fade_in_out(gui.get_node("root"), 0.3, 0)
+	self.data = monarch.data(monarch.top())
+	print("initialized LOADING ", self.data.load)
+
+	local upper = false
+	local text = self.data.load
+	if self.data.game_over then
+		text = "GAME OVER\n".."RELOADING "..self.data.load
+	end
+	local node = gui.get_node("text")
+	timer.delay(0.5, true, function()
+		upper = not upper
+		if upper then
+			text = string.upper(text)
+		else
+			text = string.lower(text)
+		end
+		gui.set_text(node, text)
+	end)
+
+	timer.delay(2, false, function() msg.post("#", LOAD_LEVEL) end)
+end
+
+function final(self)
+	msg.post("#", "release_input_focus")
+end
+
+function on_message(self, message_id, message, sender)
+	self.transition.handle(message_id, message, sender)
+	if message_id == LOAD_LEVEL then
+		print("2 Loading ", self.data.load)
+		self.preload = timer.delay(0.1, true, function()	-- timer for requests for preload
+			monarch.preload(self.data.load, function()		-- preload screen
+				timer.cancel(self.preload)					-- and when preloaded, cancel requests for preload
+				monarch.unload(monarch.top())
+				repeat
+					local success = monarch.show(self.data.load)				-- and show the preloaded screen
+				until (success)
+			end)
+		end)
+	end
+end
