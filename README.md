@@ -1,21 +1,15 @@
-# Welcome to Defold
+# Water sources
 
-This project was created from the "mobile" project template. This means that the settings in ["game.project"](defold://open?path=/game.project) have been changed to be suitable for a mobile game:
+Unofficial Defold Game Jam #2 submission
 
-- The screen size is set to 640x1136
-- Orientation is fixed vertically
-- Android and iOS icons are set
-- iOS launch images (blank ones) are set
-- Mouse click/single touch is bound to action "touch"
-- A simple script in a game object is set up to receive and react to input
-- Accelerometer input is turned off (for better battery life)
+The game is based on my Defluid asset - fluid simulation. 
 
-[Build and run](defold://build) to see it in action. You can of course alter these settings to fit your needs.
+It is available to play [here on itch.io](https://paweljarosz.itch.io/water-sources)
 
-Check out [the documentation pages](https://defold.com/learn) for examples, tutorials, manuals and API docs.
+The game's aim is to flood the logo of Defold with a water. You can do this by tapping/clicking on the screen to explode a bomb. You have limited amount of bombs. And each droplet is drying in a moment. Have fun while playing with simulated fluid!
 
-If you run into trouble, help is available in [our forum](https://forum.defold.com).
+Why the game is getting harder and harder?
 
-Happy Defolding!
+Well,  in real world the water sources are drying really fast, oftentimes before soaking deep into the ground. Meanwhile, the underground water is a source of water for people. We can't treat it as an unlimited source. Due to global warming and increasing (at an alarming rate) consumption, sources are insufficient. Bear in mind this keynote, live and take care of lives! :)
 
 ---
